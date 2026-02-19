@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: billing-service
-        image: oficina-billing-service:latest
-        imagePullPolicy: Never
+        image: lucasscuissiatto/oficina-billing-service:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8081
         env:
@@ -28,7 +28,10 @@ spec:
         - name: SPRING_RABBITMQ_HOST
           value: "rabbitmq-service"
         - name: MERCADOPAGO_ACCESS_TOKEN
-          value: "SEU_TOKEN_AQUI" # Se for subir no Git, use Secrets, mas para o desafio pode por direto ou usar ConfigMap
+          valueFrom:
+            secretKeyRef:
+              name: mercadopago-secrets
+              key: access-token
 ---
 apiVersion: v1
 kind: Service
