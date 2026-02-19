@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+oficina-billing,br.com.fiap.oficina.infrastructure.configuration,BillingConsumer,0,110,0,0,0,28,0,3,0,3
+oficina-billing,br.com.fiap.oficina.infrastructure.configuration,RabbitMQConfig,0,43,0,0,0,8,0,8,0,8
+oficina-billing,br.com.fiap.oficina.application.service,PaymentService,0,57,0,0,0,22,0,2,0,2
+oficina-billing,br.com.fiap.oficina,OficinaApplication,8,0,0,0,3,0,2,0,2,0
+oficina-billing,br.com.fiap.oficina.infrastructure.persistence.entity,Payment,10,0,2,0,3,0,2,0,1,0
+oficina-billing,br.com.fiap.oficina.presentation.controller,WebhookController,0,89,2,8,0,20,2,5,0,2
+oficina-billing,br.com.fiap.oficina.presentation.controller,BillingTestController,29,0,0,0,7,0,2,0,2,0
+oficina-billing,br.com.fiap.oficina.presentation.controller,BillingController,0,29,0,0,0,7,0,3,0,3

@@ -1,0 +1,5 @@
+br/com/fiap/oficina/application/service/PaymentServiceTest.class
+br/com/fiap/oficina/infrastructure/configuration/BillingConsumerTest.class
+br/com/fiap/oficina/infrastructure/configuration/RabbitMQConfigTest.class
+br/com/fiap/oficina/presentation/controller/WebhookControllerTest.class
+br/com/fiap/oficina/presentation/controller/BillingControllerTest.class

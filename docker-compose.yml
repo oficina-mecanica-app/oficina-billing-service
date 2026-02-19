@@ -1,0 +1,46 @@
+services:
+  app:
+    build: .
+    container_name: oficina-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/oficina_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_MAIL_HOST=mailhog
+      - SPRING_MAIL_PORT=1025
+      - APP_ADMIN_DEFAULT_PASSWORD=password
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    container_name: oficina-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=oficina_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog-tech-challenge
+    platform: linux/amd64
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube-tech-challenge
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+
+volumes:
+  postgres_data:

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebhookController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oficina-billing</a> &gt; <a href="index.source.html" class="el_package">br.com.fiap.oficina.presentation.controller</a> &gt; <span class="el_source">WebhookController.java</span></div><h1>WebhookController.java</h1><pre class="source lang-java linenums">package br.com.fiap.oficina.presentation.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.mercadopago.client.payment.PaymentClient;
+import com.mercadopago.resources.payment.Payment;
+
+@RestController
+@RequestMapping(&quot;/billing&quot;)
+<span class="fc" id="L19">public class WebhookController {</span>
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @PostMapping(&quot;/webhook&quot;)
+    public ResponseEntity&lt;String&gt; receiveWebhook(
+            @RequestParam(value = &quot;data.id&quot;, required = false) Long dataId,
+            @RequestParam(value = &quot;type&quot;, required = false) String type) {
+
+<span class="pc bpc" id="L29" title="1 of 4 branches missed.">        if (&quot;payment&quot;.equals(type) &amp;&amp; dataId != null) {</span>
+            try {
+<span class="fc" id="L31">                PaymentClient client = new PaymentClient();</span>
+<span class="fc" id="L32">                Payment payment = client.get(dataId);</span>
+
+<span class="fc" id="L34">                Long osId = Long.valueOf(payment.getExternalReference());</span>
+<span class="fc" id="L35">                Map&lt;String, Object&gt; event = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L36">                event.put(&quot;serviceOrderId&quot;, osId);</span>
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">                if (&quot;approved&quot;.equals(payment.getStatus())) {</span>
+<span class="fc" id="L39">                    System.out.println(&quot;✅ WEBHOOK: Pagamento REAL aprovado para OS &quot; + osId);</span>
+<span class="fc" id="L40">                    event.put(&quot;status&quot;, &quot;PAID&quot;);</span>
+<span class="fc" id="L41">                    rabbitTemplate.convertAndSend(&quot;os-payment-approved-queue&quot;, event);</span>
+<span class="fc" id="L42">                    rabbitTemplate.convertAndSend(&quot;execution-payment-approved-queue&quot;, event);</span>
+                } 
+<span class="pc bpc" id="L44" title="1 of 4 branches missed.">                else if (&quot;rejected&quot;.equals(payment.getStatus()) || &quot;cancelled&quot;.equals(payment.getStatus())) {</span>
+<span class="fc" id="L45">                    System.out.println(&quot;❌ WEBHOOK: Pagamento RECUSADO para OS &quot; + osId);</span>
+<span class="fc" id="L46">                    event.put(&quot;status&quot;, &quot;REFUSED&quot;);</span>
+<span class="fc" id="L47">                    rabbitTemplate.convertAndSend(&quot;payment-refused-queue&quot;, event);</span>
+                }
+
+<span class="fc" id="L50">            } catch (Exception e) {</span>
+<span class="fc" id="L51">                System.err.println(&quot;Erro ao processar webhook do MP: &quot; + e.getMessage());</span>
+<span class="fc" id="L52">            }</span>
+        }
+        
+<span class="fc" id="L55">        return ResponseEntity.ok(&quot;OK&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

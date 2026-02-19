@@ -1,0 +1,5 @@
+/Users/lucasscuissiatto/Projects/tech-challenge-fase4/oficina-billing-service/src/test/java/br/com/fiap/oficina/application/service/PaymentServiceTest.java
+/Users/lucasscuissiatto/Projects/tech-challenge-fase4/oficina-billing-service/src/test/java/br/com/fiap/oficina/infrastructure/configuration/BillingConsumerTest.java
+/Users/lucasscuissiatto/Projects/tech-challenge-fase4/oficina-billing-service/src/test/java/br/com/fiap/oficina/infrastructure/configuration/RabbitMQConfigTest.java
+/Users/lucasscuissiatto/Projects/tech-challenge-fase4/oficina-billing-service/src/test/java/br/com/fiap/oficina/presentation/controller/BillingControllerTest.java
+/Users/lucasscuissiatto/Projects/tech-challenge-fase4/oficina-billing-service/src/test/java/br/com/fiap/oficina/presentation/controller/WebhookControllerTest.java
