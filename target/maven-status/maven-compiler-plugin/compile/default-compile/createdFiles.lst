@@ -1,0 +1,9 @@
+br/com/fiap/oficina/presentation/controller/WebhookController.class
+br/com/fiap/oficina/OficinaApplication.class
+br/com/fiap/oficina/presentation/controller/BillingTestController.class
+br/com/fiap/oficina/presentation/controller/BillingController.class
+br/com/fiap/oficina/application/service/PaymentService.class
+br/com/fiap/oficina/infrastructure/persistence/repository/PaymentRepository.class
+br/com/fiap/oficina/infrastructure/configuration/RabbitMQConfig.class
+br/com/fiap/oficina/infrastructure/persistence/entity/Payment.class
+br/com/fiap/oficina/infrastructure/configuration/BillingConsumer.class

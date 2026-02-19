@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oficina-billing</a> &gt; <a href="index.source.html" class="el_package">br.com.fiap.oficina.application.service</a> &gt; <span class="el_source">PaymentService.java</span></div><h1>PaymentService.java</h1><pre class="source lang-java linenums">package br.com.fiap.oficina.application.service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.preference.PreferenceClient;
+import com.mercadopago.client.preference.PreferenceItemRequest;
+import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.resources.preference.Preference;
+
+@Service
+<span class="fc" id="L17">public class PaymentService {</span>
+
+    @Value(&quot;${mercadopago.access.token}&quot;)
+    private String accessToken;
+
+    public String createPaymentPreference(Long osId, BigDecimal amount) {
+        try {
+<span class="fc" id="L24">            MercadoPagoConfig.setAccessToken(accessToken);</span>
+
+<span class="fc" id="L26">            String ngrokUrl = &quot;https://5d56-187-7-158-146.ngrok-free.app&quot;;</span>
+
+<span class="fc" id="L28">            PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()</span>
+<span class="fc" id="L29">                    .id(osId.toString())</span>
+<span class="fc" id="L30">                    .title(&quot;Ordem de Servico &quot; + osId)</span>
+<span class="fc" id="L31">                    .quantity(1)</span>
+<span class="fc" id="L32">                    .unitPrice(amount)</span>
+<span class="fc" id="L33">                    .build();</span>
+
+<span class="fc" id="L35">            List&lt;PreferenceItemRequest&gt; items = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L36">            items.add(itemRequest);</span>
+
+<span class="fc" id="L38">            PreferenceRequest preferenceRequest = PreferenceRequest.builder()</span>
+<span class="fc" id="L39">                    .items(items)</span>
+<span class="fc" id="L40">                    .externalReference(osId.toString())</span>
+<span class="fc" id="L41">                    .notificationUrl(ngrokUrl + &quot;/billing/webhook&quot;)</span>
+<span class="fc" id="L42">                    .build();</span>
+
+<span class="fc" id="L44">            PreferenceClient client = new PreferenceClient();</span>
+<span class="fc" id="L45">            Preference preference = client.create(preferenceRequest);</span>
+
+<span class="fc" id="L47">            return preference.getInitPoint();</span>
+<span class="fc" id="L48">        } catch (Exception e) {</span>
+<span class="fc" id="L49">            e.printStackTrace();</span>
+<span class="fc" id="L50">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

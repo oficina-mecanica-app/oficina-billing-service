@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: billing-service
+  template:
+    metadata:
+      labels:
+        app: billing-service
+    spec:
+      containers:
+      - name: billing-service
+        image: oficina-billing-service:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8081
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://mysql-service:3306/oficina_billing?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "root"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "root_password"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq-service"
+        - name: MERCADOPAGO_ACCESS_TOKEN
+          value: "SEU_TOKEN_AQUI" # Se for subir no Git, use Secrets, mas para o desafio pode por direto ou usar ConfigMap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: billing-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: billing-service
+  ports:
+  - port: 8081
+    targetPort: 8081
