@@ -21,11 +21,9 @@ public class BillingTestController {
     @PostMapping("/refuse/{osId}")
     public ResponseEntity<String> simulateRefusal(@PathVariable Long osId) {
         
-        System.out.println("❌ Simulando recusa de pagamento para OS: " + osId);
-        
         // Dispara evento de compensação
         Map<String, Object> event = new HashMap<>();
-        event.put("osId", osId);
+        event.put("serviceOrderId", osId);
         event.put("reason", "Cartão Recusado / Saldo Insuficiente");
         
         rabbitTemplate.convertAndSend("payment-refused-queue", event);

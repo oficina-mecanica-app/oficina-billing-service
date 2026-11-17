@@ -1,7 +1,7 @@
 package br.com.fiap.oficina.application.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.when;
@@ -53,9 +53,16 @@ public class PaymentServiceTest {
                     when(mock.create(any(PreferenceRequest.class))).thenThrow(new RuntimeException());
                 })) {
 
-            String result = paymentService.createPaymentPreference(1L, new BigDecimal("100.00"));
-
-            assertNull(result);
+            assertThrows(IllegalStateException.class,
+                    () -> paymentService.createPaymentPreference(1L, new BigDecimal("100.00")));
         }
+    }
+
+    @Test
+    public void deveFalharQuandoTokenNaoEstiverConfigurado() {
+        ReflectionTestUtils.setField(paymentService, "accessToken", "");
+
+        assertThrows(IllegalStateException.class,
+                () -> paymentService.createPaymentPreference(1L, new BigDecimal("100.00")));
     }
 }
