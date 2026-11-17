@@ -23,15 +23,29 @@ spec:
           value: "jdbc:mysql://mysql-service:3306/oficina_billing?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
         - name: SPRING_DATASOURCE_USERNAME
           value: "root"
+        # Segredos vêm do Secret "oficina-secrets" (ver oficina-infra-k8s/secrets.example.yaml)
         - name: SPRING_DATASOURCE_PASSWORD
-          value: "root_password"
+          valueFrom:
+            secretKeyRef:
+              name: oficina-secrets
+              key: mysql-root-password
         - name: SPRING_RABBITMQ_HOST
           value: "rabbitmq-service"
+        - name: SPRING_RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oficina-secrets
+              key: rabbitmq-password
         - name: MERCADOPAGO_ACCESS_TOKEN
           valueFrom:
             secretKeyRef:
-              name: mercadopago-secrets
-              key: access-token
+              name: oficina-secrets
+              key: mercadopago-access-token
+        - name: MERCADOPAGO_NOTIFICATION_URL
+          valueFrom:
+            secretKeyRef:
+              name: oficina-secrets
+              key: mercadopago-notification-url
 ---
 apiVersion: v1
 kind: Service
