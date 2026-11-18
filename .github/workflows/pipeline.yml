@@ -25,7 +25,7 @@ jobs:
       - name: SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn sonar:sonar -Dsonar.projectKey=oficina-mecanica-app_oficina-billing-service -Dsonar.organization=oficina-mecanica-app -Dsonar.host.url=https://sonarcloud.io
+        run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=oficina-mecanica-app_oficina-billing-service -Dsonar.organization=oficina-mecanica-app -Dsonar.host.url=https://sonarcloud.io
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
